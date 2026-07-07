@@ -1,0 +1,128 @@
+.app {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  padding: 20px 24px 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.app-header h1 {
+  font-size: 24px;
+  margin: 0 0 12px;
+  text-align: left;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.tab {
+  padding: 8px 20px;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text);
+  transition: all 0.15s;
+}
+
+.tab:hover {
+  background: var(--code-bg);
+}
+
+.tab.active {
+  background: var(--bg);
+  border-color: var(--border);
+  color: var(--text-h);
+  font-weight: 600;
+  margin-bottom: -1px;
+}
+
+.app-main {
+  flex: 1;
+  padding: 24px;
+  text-align: left;
+}
+
+.app-main h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.data-table th {
+  font-weight: 600;
+  color: var(--text-h);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table tbody tr {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.data-table tbody tr:hover {
+  background: var(--code-bg);
+}
+
+.data-table tbody tr.selected {
+  background: var(--accent-bg);
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+}
+
+.error {
+  color: #e74c3c;
+}
+
+.detail-panel {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.detail-panel h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.chart-wrapper {
+  margin-top: 8px;
+}
+
+.chart-hint {
+  font-size: 12px;
+  color: var(--text);
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.chart-container {
+  height: 450px;
+  width: 100%;
+}

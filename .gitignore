@@ -1,0 +1,15 @@
+pgdata/
+fe/node_modules/
+fe/dist/
+be/.venv/
+be/__pycache__/
+be/**/__pycache__/
+be/**/*.pyc
+__pycache__/
+*.pyc
+.env
+.idea/
+*.log
+.DS_Store
+Thumbs.db
+*.local
