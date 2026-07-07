@@ -40,6 +40,7 @@ class DataSeriesService:
             data_set_id=data.data_set_id,
             source_model_id=data.source_model_id,
         )
+        self.db.commit()
         return DataSeriesRead.model_validate(ds)
 
     def delete(self, id: uuid.UUID) -> None:
@@ -47,3 +48,4 @@ class DataSeriesService:
         if not ds:
             raise NotFoundError("DataSeries not found")
         delete(self.db, ds)
+        self.db.commit()

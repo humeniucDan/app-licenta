@@ -22,6 +22,7 @@ class MetricService:
 
     def create(self, data: MetricCreate) -> MetricRead:
         m = create(self.db, Metric, name=data.name, description=data.description)
+        self.db.commit()
         return MetricRead.model_validate(m)
 
     def delete(self, id: uuid.UUID) -> None:
@@ -29,3 +30,4 @@ class MetricService:
         if not m:
             raise NotFoundError("Metric not found")
         delete(self.db, m)
+        self.db.commit()

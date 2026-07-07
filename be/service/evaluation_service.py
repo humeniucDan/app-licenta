@@ -36,6 +36,7 @@ class EvaluationService:
             pred_data_series_id=data.pred_data_series_id,
             value=data.value,
         )
+        self.db.commit()
         return EvaluationRead.model_validate(e)
 
     def delete(self, id: uuid.UUID) -> None:
@@ -43,3 +44,4 @@ class EvaluationService:
         if not e:
             raise NotFoundError("Evaluation not found")
         delete(self.db, e)
+        self.db.commit()

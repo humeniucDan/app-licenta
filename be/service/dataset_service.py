@@ -29,6 +29,7 @@ class DataSetService:
 
     def create(self, data: DataSetCreate) -> DataSetRead:
         ds = create(self.db, DataSet, name=data.name, description=data.description)
+        self.db.commit()
         return DataSetRead.model_validate(ds)
 
     def delete(self, id: uuid.UUID) -> None:
@@ -36,3 +37,4 @@ class DataSetService:
         if not ds:
             raise NotFoundError("DataSet not found")
         delete(self.db, ds)
+        self.db.commit()

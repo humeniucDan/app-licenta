@@ -30,6 +30,7 @@ class TimeStampService:
             value=data.value,
             data_series_id=data.data_series_id,
         )
+        self.db.commit()
         return TimeStampRead.model_validate(ts)
 
     def delete(self, id: uuid.UUID) -> None:
@@ -37,3 +38,4 @@ class TimeStampService:
         if not ts:
             raise NotFoundError("TimeStamp not found")
         delete(self.db, ts)
+        self.db.commit()

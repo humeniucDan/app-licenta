@@ -29,6 +29,7 @@ class ModelService:
 
     def create(self, data: ModelCreate) -> ModelRead:
         model = create(self.db, Model, name=data.name)
+        self.db.commit()
         return ModelRead.model_validate(model)
 
     def delete(self, id: uuid.UUID) -> None:
@@ -36,3 +37,4 @@ class ModelService:
         if not model:
             raise NotFoundError("Model not found")
         delete(self.db, model)
+        self.db.commit()
