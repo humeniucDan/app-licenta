@@ -24,3 +24,7 @@ export function getDatasetDetail(id) {
 export function getModelDetail(id) {
   return get(`/models/${id}`)
 }
+
+export function getEvaluationsByDataset(id) {
+  return get(`/evaluations/dataset/${id}`)
+}

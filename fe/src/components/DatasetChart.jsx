@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -40,39 +41,35 @@ function formatDate(iso) {
 }
 
 export default function DatasetChart({ dataSeries }) {
+  const { datasets, labels } = useMemo(() => {
+    if (!dataSeries || dataSeries.length === 0) return { datasets: [], labels: [] }
+
+    const first = dataSeries[0]
+    const labels = first.timestamps.map(ts => formatDate(ts.date))
+
+    const sorted = [...dataSeries].sort((a, b) => a.name.localeCompare(b.name))
+    const datasets = sorted.map((series, i) => ({
+      label: series.name,
+      data: series.timestamps.map(ts => Number(ts.value.OT)),
+      borderColor: COLORS[i % COLORS.length],
+      borderWidth: 0.5,
+      pointRadius: 0,
+      pointHoverRadius: 3,
+      tension: 0,
+      fill: false,
+    }))
+
+    return { datasets, labels }
+  }, [dataSeries])
+
   if (!dataSeries || dataSeries.length === 0) {
     return <p>No data series in this dataset.</p>
   }
 
-  const datasets = dataSeries.map((series, i) => {
-    const color = COLORS[i % COLORS.length]
-    const sorted = [...series.timestamps].sort(
-      (a, b) => new Date(a.date) - new Date(b.date),
-    )
-    return {
-      label: series.name,
-      data: sorted.map(ts => ({
-        x: formatDate(ts.date),
-        y: Number(ts.value.OT),
-      })),
-      borderColor: color,
-      backgroundColor: color + '33',
-      pointRadius: 2,
-      pointHoverRadius: 5,
-      tension: 0.1,
-      fill: false,
-    }
-  })
-
-  const allTimestamps = dataSeries.flatMap(s => s.timestamps)
-  const allLabels = [...new Set(allTimestamps.map(ts => formatDate(ts.date)))]
-  allLabels.sort((a, b) => new Date(a) - new Date(b))
-
-  const data = { labels: allLabels, datasets }
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: false,
     interaction: {
       mode: 'index',
       intersect: false,
@@ -80,6 +77,7 @@ export default function DatasetChart({ dataSeries }) {
     plugins: {
       legend: {
         position: 'bottom',
+        labels: { boxWidth: 12, padding: 12, font: { size: 11 } },
       },
       tooltip: {
         callbacks: {
@@ -96,12 +94,7 @@ export default function DatasetChart({ dataSeries }) {
         zoom: {
           wheel: { enabled: true },
           pinch: { enabled: true },
-          drag: {
-            enabled: true,
-            backgroundColor: 'rgba(0,0,0,0.05)',
-            borderColor: '#666',
-            borderWidth: 1,
-          },
+          drag: false,
           mode: 'x',
         },
       },
@@ -113,11 +106,13 @@ export default function DatasetChart({ dataSeries }) {
           maxRotation: 45,
           autoSkip: true,
           maxTicksLimit: 20,
+          font: { size: 10 },
         },
       },
       y: {
         title: { display: true, text: 'OT Value' },
         beginAtZero: false,
+        ticks: { font: { size: 10 } },
       },
     },
   }
@@ -126,7 +121,7 @@ export default function DatasetChart({ dataSeries }) {
     <div className="chart-wrapper">
       <div className="chart-hint">Scroll to zoom, drag to pan, double-click to reset</div>
       <div className="chart-container">
-        <Line data={data} options={options} />
+        <Line data={{ labels, datasets }} options={options} />
       </div>
     </div>
   )

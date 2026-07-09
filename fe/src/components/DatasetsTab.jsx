@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
-import { getDatasets, getDatasetDetail } from '../api'
+import { getDatasets, getDatasetDetail, getEvaluationsByDataset } from '../api'
 import DatasetChart from './DatasetChart'
+import EvaluationsTable from './EvaluationsTable'
 
 export default function DatasetsTab() {
   const [datasets, setDatasets] = useState([])
   const [selectedId, setSelectedId] = useState(null)
   const [detail, setDetail] = useState(null)
+  const [evaluations, setEvaluations] = useState(null)
   const [loading, setLoading] = useState(true)
   const [loadingDetail, setLoadingDetail] = useState(false)
   const [error, setError] = useState(null)
@@ -20,11 +22,18 @@ export default function DatasetsTab() {
   useEffect(() => {
     if (!selectedId) {
       setDetail(null)
+      setEvaluations(null)
       return
     }
     setLoadingDetail(true)
-    getDatasetDetail(selectedId)
-      .then(setDetail)
+    Promise.all([
+      getDatasetDetail(selectedId),
+      getEvaluationsByDataset(selectedId),
+    ])
+      .then(([d, ev]) => {
+        setDetail(d)
+        setEvaluations(ev)
+      })
       .catch(setError)
       .finally(() => setLoadingDetail(false))
   }, [selectedId])
@@ -64,9 +73,12 @@ export default function DatasetsTab() {
         <div className="detail-panel">
           <h3>{datasets.find(d => d.id === selectedId)?.name}</h3>
           {loadingDetail ? (
-            <p>Loading data series...</p>
+            <p>Loading data...</p>
           ) : detail ? (
-            <DatasetChart dataSeries={detail.data_series} />
+            <>
+              <DatasetChart dataSeries={detail.data_series} />
+              {evaluations && <EvaluationsTable evaluations={evaluations} />}
+            </>
           ) : null}
         </div>
       )}
